@@ -33,9 +33,15 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     private UserDetailsServiceImpl userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @Nullable HttpServletResponse response, @Nullable FilterChain filterChain)
+    protected void doFilterInternal(@Nullable HttpServletRequest request, @Nullable HttpServletResponse response, @Nullable FilterChain filterChain)
             throws IOException, ServletException
     {
+        if (response == null || filterChain == null) {
+            return;
+        }
+
+        assert request != null;
+
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
@@ -53,7 +59,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             }
 
         }
-        assert filterChain != null;
         filterChain.doFilter(request, response);
     }
 }
